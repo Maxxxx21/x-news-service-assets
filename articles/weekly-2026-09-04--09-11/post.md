@@ -1,4 +1,4 @@
-Отчёт за неделю 4–11 сентября 2026. Ниже перечислено, что сделано, по репозиториям: News Service (news-searcher-ai-service), CRM (xerion-client и xerion-server), PWA Manager (xerion-pwa-manager-client и -server), Voice Lab (voice-lab-app-client и -server). Всего за неделю смержено 15 PR, ещё 7 коммитов ушли напрямую в main и в feature-ветки. Скриншоты сняты с локальных стендов на тестовых данных.
+Отчёт за неделю 4–11 сентября 2026. Ниже перечислено, что сделано, по репозиториям: News Service (news-searcher-ai-service) и Voice Lab (voice-lab-app-client и -server). В News Service смержено 11 PR, в Voice Lab 5 коммитов в feature-ветках. Скриншоты сняты с локальных стендов на тестовых данных.
 
 #### News Service (news-searcher-ai-service)
 
@@ -60,40 +60,14 @@
 
 Довёл в main пункты 6–10 и опубликовал релизную статью [X News Service Official release 1.1.0](https://telegra.ph/X-News-Service-Official-release-110-09-09) с обложкой и скриншотами Spy. Картинки обеих статей вынес в отдельный публичный репозиторий x-news-service-assets.
 
-#### CRM (xerion-client, xerion-server)
+#### Voice Lab (voice-lab-app-client, voice-lab-app-server)
 
-**12) DEV-664 Requested by и вкладка Not shared — выполнено**, [PR #220](https://github.com/xerion-tech/xerion-server/pull/220) и [PR #256](https://github.com/xerion-tech/xerion-client/pull/256) смержены
+**12) UX Studio и серверная основа под него — в работе, ветки feature/ux-studio (клиент) и feature/server-ui-foundation (сервер), PR пока нет**
 
-На сервере добавил поле requestedById для Apps, PWA's и Landings: заказчик = первый байер, с которым поделились, ставится один раз во всех девяти путях записи, есть бэкфилл-миграция. В листингах появился фильтр requestedById с сентинелом «none» и режим доступа unshared, единая валидация ObjectId. На клиенте — мультиселект Requested by с закреплённым пунктом No requester, колонка и строка в деталях, четвёртая вкладка Not shared в By Access; всё держится в URL.
+Разрабатываю новый интерфейс VoiceLab: разделы Scene, Speech и Background Sound, библиотека голосов, единый плеер, карточки заданий с Reuse, Retry и скачиванием. Клиентская часть готова и закоммичена в feature/ux-studio; сейчас подключаю к ней сервер, чтобы настройки скорости, эмоции и фона реально применялись, а статусы очереди приходили с сервера, а не считались приблизительно.
 
-![Фильтр Not shared и селектор Requested by в панели фильтров Apps](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/941575b09fddb399bd9c69093e0ec8b7b31abdf4/articles/weekly-2026-09-04--09-11/dev-664-not-shared-filter.jpg)
+![Раздел Scene в UX Studio: промпт, голос, скорость, эмоция и фон](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/4ad15df5b517ff80cb24a5bbc89c969ffe4b4d89/articles/weekly-2026-09-04--09-11/voicelab-ux-studio-scene.jpg)
 
-![Список Requested by с пунктом No requester и байерами](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/941575b09fddb399bd9c69093e0ec8b7b31abdf4/articles/weekly-2026-09-04--09-11/dev-664-requested-by.jpg)
+Что уже сделано на сервере (4 коммита за 11 сентября): FFmpeg в рантайме и воспроизводимый локальный запуск (T01), стабильный безопасный контракт ошибок HTTP и заданий (T13), проверка прав на выбранный голос при приёме и инференсе (T07), документ с возможностями моделей и рубрикой акустической приёмки. В работе: атомарное сохранение заданий и корректное завершение при остановке (часть T12).
 
-**13) DEV-697 Скачивание креативов по списку creoID — выполнено**, [PR #223](https://github.com/xerion-tech/xerion-server/pull/223) и [PR #258](https://github.com/xerion-tech/xerion-client/pull/258) смержены
-
-Новый эндпоинт принимает до 200 creoID, проверяет доступ и возвращает задачу на ZIP плюс отчёт по каждому id (queued / no access / not found); файлы в архиве названы по creoID, поддержан режим уникализации с applyCount. На клиенте — кнопка Download by IDs на странице Creatives, модалка с отчётом, кнопки Download Unique и Download Originals, задача сразу видна в Processes. Попутно починил примитив Tooltip (подсказка перекрывала меню и модалки) и добавил вложенные модалки.
-
-![Модалка Download by creo IDs со вставленным списком](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/941575b09fddb399bd9c69093e0ec8b7b31abdf4/articles/weekly-2026-09-04--09-11/dev-697-download-by-ids.jpg)
-
-![Отчёт после запуска: сколько поставлено в очередь и какие id не найдены](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/941575b09fddb399bd9c69093e0ec8b7b31abdf4/articles/weekly-2026-09-04--09-11/dev-697-report.jpg)
-
-#### PWA Manager (xerion-pwa-manager-server, xerion-pwa-manager-client)
-
-**14) Custom PWA builder, контракт контента v1 — выполнено, коммиты [c65ae22](https://github.com/xerion-tech/xerion-pwa-manager-server/commit/c65ae22) в main сервера и [a295e8b](https://github.com/xerion-tech/xerion-pwa-manager-client/commit/a295e8b) в ветке client-builder-fields**
-
-Сервер: язык карточки и словари текстов en/ru/uk с переопределениями, install flow (стадии загрузки, авто-открытие оффера, Back Button URL, passthrough параметров), splash, cookie-баннер, TikTok preland v1–v3, дизайн (обложка, акцентный цвет), лайки отзывов, эндпоинты /locales, /text-defaults и POST /preview для рендера черновика; легаси-записи читаются без миграции. Клиент: билдер перестроен в двенадцать секций, текстовые поля показывают дефолт языка как placeholder, drag-and-drop скриншотов, предпросмотр черновика в iframe с debounce и переключателями состояния и ОС.
-
-![Билдер Custom PWA: секция Basic с языком карточки и предпросмотром](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/941575b09fddb399bd9c69093e0ec8b7b31abdf4/articles/weekly-2026-09-04--09-11/pwa-builder-basic.jpg)
-
-![Секция Install: кнопки, стадии загрузки, iOS-подсказка](https://raw.githubusercontent.com/Maxxxx21/x-news-service-assets/941575b09fddb399bd9c69093e0ec8b7b31abdf4/articles/weekly-2026-09-04--09-11/pwa-builder-install.jpg)
-
-#### Voice Lab (voice-lab-app-server, voice-lab-app-client)
-
-**15) Сервер: безопасный HTTP-контракт, авторизация голосов, FFmpeg — в работе, 4 коммита в ветке feature/server-ui-foundation (11 сентября), PR пока нет**
-
-Добавил стабильный контракт ошибок HTTP и задач, авторизацию выбранных голосов при приёме и инференсе, укрепил рантайм FFmpeg и проверил локальные аудио-сценарии, зафиксировал в документации возможности доставки моделей и рубрику акустической приёмки.
-
-**16) Клиент: интерфейс UX Studio — в работе, коммит в ветке feature/ux-studio (11 сентября), PR пока нет**
-
-Завершил интерфейс UX Studio и положил рядом план серверной реализации (docs/plans/2026-09-11-server-ui-orca: контракты, аудит GPU и сервера, QA-матрица, задачи T01+).
+План: 18 задач в docs/plans/2026-09-11-server-ui-orca, каждая в своём worktree от beta, до трёх исполнителей параллельно плюс независимое ревью. Порядок: окружение и перенос UX Studio в beta (T01, T02) → контракт запросов (T03) → передача настроек через bridge и права (T06, T07) → Speech и Scene применяют скорость, эмоцию, три режима фона и громкости (T08–T11) → стадии исполнения и реальная позиция в очереди (T12, T13) → клиент получает новые настройки и серверные статусы (T14, T15) → приёмка на реальном генераторе и включение только проверенных capability-флагов (T16, T17). Ожидаемый результат: флаги sceneDelivery, speechDelivery, sceneMix и backgroundSeed включаются по отдельности после реального аудио на используемой модели; пока GPU не подтвердил поддержку эмоций, соответствующий флаг остаётся выключенным, остальное продукт не блокирует.
